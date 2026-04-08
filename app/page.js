@@ -567,21 +567,31 @@ export default function ExtracurricularHub() {
     });
   }
 
-  function handleSearch() {
-    if (!location.trim()) return;
-    setSearching(true);
-    setSearchDone(false);
-    // Simulating Gemini API call
-    setTimeout(() => {
-      let results = MOCK_OPPORTUNITIES;
-      if (selectedCats.length > 0) {
-        results = results.filter((o) => selectedCats.includes(o.category));
-      }
-      setFilteredOpps(results);
-      setSearching(false);
-      setSearchDone(true);
-    }, 1800);
+ async function handleSearch() {
+  if (!location.trim()) return;
+  setSearching(true);
+  setSearchDone(false);
+  try {
+    const res = await fetch("/api/search", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ location, categories: selectedCats }),
+    });
+    const data = await res.json();
+    if (data.opportunities) {
+      setFilteredOpps(data.opportunities);
+    } else {
+      console.error("Search failed:", data.error);
+      setFilteredOpps([]);
+    }
+  } catch (err) {
+    console.error("Search error:", err);
+    setFilteredOpps([]);
+  } finally {
+    setSearching(false);
+    setSearchDone(true);
   }
+}
 
   function toggleCat(id) {
     setSelectedCats((prev) =>
