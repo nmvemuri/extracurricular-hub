@@ -1,4 +1,8 @@
 "use client";
+
+import { useAuth } from "../lib/AuthContext";
+import AuthScreen from "../components/AuthScreen";
+
 import { useState, useEffect, useRef } from "react";
 
 const CATEGORIES = [
@@ -509,6 +513,9 @@ function InsightsPanel({ activities }) {
 // ─── Main App ───
 
 export default function ExtracurricularHub() {
+  const { user, loading, signOut } = useAuth();
+  if (loading) return <div style={{minHeight:"100vh",background:"#0d0d14"}} />;
+  if (!user) return <AuthScreen />;
   const [tab, setTab] = useState("tracker");
   const [activities, setActivities] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
