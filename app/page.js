@@ -2,7 +2,6 @@
 
 import { useAuth } from "../lib/AuthContext";
 import AuthScreen from "../components/AuthScreen";
-
 import { useState, useEffect, useRef } from "react";
 
 const CATEGORIES = [
